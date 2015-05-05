@@ -20,7 +20,7 @@ $(document).ready(function(){
   }
 
   function calculate_monthly_payment() {
-      // setting these as local variables...easier to read vs huge parse float equations.
+
       var loan_amount = parseFloat(jQuery('#amount').val());
       var interest_rate = parseFloat(jQuery('#interest').val())/100;
       var monthly_interest_rate = interest_rate/12;
@@ -29,13 +29,15 @@ $(document).ready(function(){
       if(jQuery('select[id=monthly-yearly]').val() == 'months') {
         length_of_mortgage = parseInt(jQuery('#term-months').val());
       };
-
-      // begin the formula for calculate the fixed monthly payment
-      // REFERENCE: P = L[c(1 + c)n]/[(1 + c)n - 1]
+      //http://en.wikipedia.org/wiki/Fixed-rate_mortgage
+      //ex. fixed rate6.5 , loan=200000, 30 years
+      //=PMT(6.5/100/12,30*12,200000)
+      //=((6.5/100/12)/(1-(1+6.5/100/12)^(-30*12)))*200000
+      //=1264.14
       var top_val = monthly_interest_rate * Math.pow((1+monthly_interest_rate),length_of_mortgage);
       var bot_val = Math.pow((1 + monthly_interest_rate),(length_of_mortgage))-1;
       var monthly_mortgage = parseFloat(loan_amount*(top_val/bot_val)).toFixed(2);
-
+      
       calculate_amortization(loan_amount, monthly_mortgage, monthly_interest_rate, length_of_mortgage);
       jQuery('#total').val(monthly_mortgage);
     }
@@ -100,7 +102,14 @@ $(document).ready(function(){
       jQuery('table#amortization').html(tableData);
     }
 
-  jQuery('#years-field').hide();
+  if ($(this).val() == 'months') {
+          jQuery('#years-field').hide();
+          jQuery('#months-field').show();
+        }
+        else {
+          jQuery('#months-field').hide();
+          jQuery('#years-field').show();
+  };
 
   jQuery('select[id=monthly-yearly]').change(function () {
 

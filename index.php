@@ -44,6 +44,7 @@
     <a href="#aboutus">About Us</a>
     <a href="#rate">Rate</a>
     <a href="#calculator">Calculate</a>
+    <a href="#results">Amortization</a>
     </div>
   </nav>
   <header class="container">
